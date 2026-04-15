@@ -1,0 +1,58 @@
+### Rejestracja nowego użytkownika
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+    "first_name": "Jan",
+    "last_name": "Kowalski",
+    "email": "jan.kowalski@test.pl",
+    "password": "mojetajnehaslo"
+}
+
+### Logowanie użytkownika
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "jan.kowalski@test.pl",
+    "password": "mojetajnehaslo"
+}
+
+### 1. Zaloguj się 
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "jan.kowalski@test.pl",
+    "password": "mojetajnehaslo"
+}
+# UWAGA: Po kliknięciu Send Request, skopiuj z prawego okna długi ciąg znaków (token).
+
+### 2. Pobierz listę boisk 
+GET http://localhost:5000/api/facilities
+
+
+### 3. Dodaj nowe boisko 
+POST http://localhost:5000/api/facilities
+Content-Type: application/json
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZGZjYTc1ODA4NGI5MDc5MDRhZGU0MyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NjI3NDYyMiwiZXhwIjoxNzc2MzYxMDIyfQ.Kbr32aGK4G2cQdBNO-fGYhhl5SxAfrimBxIqr3yy6Ms
+
+{
+    "name": "Orlik Centrum",
+    "description": "Nowoczesne boisko ze sztuczną trawą i oświetleniem",
+    "address": "ul. Sportowa 1, Warszawa",
+    "price_per_hour": 150
+}
+
+
+### 4. Zrób rezerwację 
+POST http://localhost:5000/api/reservations
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZGZjYTc1ODA4NGI5MDc5MDRhZGU0MyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NjI3NDYyMiwiZXhwIjoxNzc2MzYxMDIyfQ.Kbr32aGK4G2cQdBNO-fGYhhl5SxAfrimBxIqr3yy6Ms
+
+{
+    "facility_id": "69dfccf4495b84aeae24958d", 
+    "start_time": "2024-06-01T18:00:00Z",
+    "end_time": "2024-06-01T19:30:00Z"
+}
