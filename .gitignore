@@ -23,3 +23,5 @@ Thumbs.db
 
 # Wymagane pliki środowiskowe
 !.env.example
+
+.vscode/
