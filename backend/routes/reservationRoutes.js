@@ -50,9 +50,9 @@ router.get('/', protect, adminOnly, async (req, res) => {
 
 router.put('/:id', protect, adminOnly, async (req, res) => {
     try {
-        const reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!reservation) return res.status(404).json({ message: 'Nie znaleziono rezerwacji do edycji' });
-        res.json(reservation);
+        const facility = await Facility.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!facility) return res.status(404).json({ message: 'Nie znaleziono obiektu do edycji' });
+        res.json(facility);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -61,9 +61,9 @@ router.put('/:id', protect, adminOnly, async (req, res) => {
 
 router.delete('/:id', protect, adminOnly, async (req, res) => {
     try {
-        const reservation = await Reservation.findByIdAndDelete(req.params.id);
-        if (!reservation) return res.status(404).json({ message: 'Nie znaleziono rezerwacji do usunięcia' });
-        res.json({ message: 'Rezerwacja została pomyślnie usunięta' });
+        const facility = await Facility.findByIdAndDelete(req.params.id);
+        if (!facility) return res.status(404).json({ message: 'Nie znaleziono obiektu do usunięcia' });
+        res.json({ message: 'Obiekt został pomyślnie usunięty' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
