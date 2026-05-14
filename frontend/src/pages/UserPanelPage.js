@@ -34,8 +34,6 @@ const UserPanelPage = () => {
 
   useEffect(() => { fetchReservations(); }, []);
 
-  // Note: cancel = DELETE /api/reservations/:id (admin-only on backend, so this is aspirational)
-  // We show the button but handle 403 gracefully
   const handleCancel = async (id) => {
     if (!window.confirm('Czy na pewno chcesz anulować tę rezerwację?')) return;
     setCancelling(id);
@@ -127,21 +125,21 @@ const UserPanelPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {reservations.map(r => (
-                  <tr key={r._id}>
-                    <td><strong>{r.facility_id?.name || '—'}</strong></td>
-                    <td style={{ color: 'var(--text-secondary)' }}>{r.facility_id?.address || '—'}</td>
-                    <td>{formatDate(r.start_time)}</td>
-                    <td>{formatDate(r.end_time)}</td>
-                    <td><Badge status={r.status} /></td>
+                {reservations.map(reservation => (
+                  <tr key={reservation._id}>
+                    <td><strong>{reservation.facility_id?.name || '—'}</strong></td>
+                    <td style={{ color: 'var(--text-secondary)' }}>{reservation.facility_id?.address || '—'}</td>
+                    <td>{formatDate(reservation.start_time)}</td>
+                    <td>{formatDate(reservation.end_time)}</td>
+                    <td><Badge status={reservation.status} /></td>
                     <td>
-                      {r.status !== 'cancelled' && (
+                      {reservation.status !== 'cancelled' && (
                         <button
                           className="btn btn-danger btn-sm"
-                          onClick={() => handleCancel(r._id)}
-                          disabled={cancelling === r._id}
+                          onClick={() => handleCancel(reservation._id)}
+                          disabled={cancelling === reservation._id}
                         >
-                          {cancelling === r._id ? '...' : 'Anuluj'}
+                          {cancelling === reservation._id ? '...' : 'Anuluj'}
                         </button>
                       )}
                     </td>
