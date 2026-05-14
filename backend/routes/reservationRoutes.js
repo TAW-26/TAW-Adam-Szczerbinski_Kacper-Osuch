@@ -3,12 +3,14 @@ const router = express.Router();
 const Reservation = require('../models/Reservation');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
 
-
+/**
+ * POST /api/reservations
+ * Tworzy nową rezerwację dla zalogowanego użytkownika.
+ */
 router.post('/', protect, async (req, res) => {
     try {
         const { facility_id, start_time, end_time } = req.body;
-        
-       
+
         if (!facility_id || !start_time || !end_time) {
             return res.status(400).json({ message: 'Proszę podać wszystkie dane' });
         }
@@ -17,7 +19,7 @@ router.post('/', protect, async (req, res) => {
             user_id: req.user.id,
             facility_id,
             start_time,
-            end_time
+            end_time,
         });
 
         res.status(201).json(reservation);
@@ -26,16 +28,24 @@ router.post('/', protect, async (req, res) => {
     }
 });
 
+/**
+ * GET /api/reservations/my
+ * Zwraca listę rezerwacji zalogowanego użytkownika.
+ */
 router.get('/my', protect, async (req, res) => {
     try {
-        const reservations = await Reservation.find({ user_id: req.user.id }).populate('facility_id', 'name address');
+        const reservations = await Reservation.find({ user_id: req.user.id })
+            .populate('facility_id', 'name address');
         res.json(reservations);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-
+/**
+ * GET /api/reservations
+ * Zwraca wszystkie rezerwacje (tylko dla administratora).
+ */
 router.get('/', protect, adminOnly, async (req, res) => {
     try {
         const reservations = await Reservation.find()
@@ -47,22 +57,36 @@ router.get('/', protect, adminOnly, async (req, res) => {
     }
 });
 
-
+/**
+ * PUT /api/reservations/:id
+ * Aktualizuje rezerwację po ID (tylko dla administratora).
+ */
 router.put('/:id', protect, adminOnly, async (req, res) => {
     try {
-        const reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!reservation) return res.status(404).json({ message: 'Nie znaleziono rezerwacji do edycji' });
-        res.json(reservation);
+        const updatedReservation = await Reservation.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        if (!updatedReservation) {
+            return res.status(404).json({ message: 'Nie znaleziono rezerwacji do edycji' });
+        }
+        res.json(updatedReservation);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-
+/**
+ * DELETE /api/reservations/:id
+ * Usuwa rezerwację po ID (tylko dla administratora).
+ */
 router.delete('/:id', protect, adminOnly, async (req, res) => {
     try {
-        const reservation = await Reservation.findByIdAndDelete(req.params.id);
-        if (!reservation) return res.status(404).json({ message: 'Nie znaleziono rezerwacji do usunięcia' });
+        const deletedReservation = await Reservation.findByIdAndDelete(req.params.id);
+        if (!deletedReservation) {
+            return res.status(404).json({ message: 'Nie znaleziono rezerwacji do usunięcia' });
+        }
         res.json({ message: 'Rezerwacja została pomyślnie usunięta' });
     } catch (error) {
         res.status(500).json({ message: error.message });
