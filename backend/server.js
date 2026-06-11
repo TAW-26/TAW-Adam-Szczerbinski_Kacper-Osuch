@@ -21,6 +21,10 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/facilities', require('./routes/facilityRoutes'));
 app.use('/api/reservations', require('./routes/reservationRoutes'));
 
+// Dashboard logów (tylko poza produkcją)
+app.use('/logs', require('./routes/logsRoutes'));
+app.use('/api/logs', require('./routes/logsRoutes'));
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Serwer działa na porcie ${PORT}`));
 
