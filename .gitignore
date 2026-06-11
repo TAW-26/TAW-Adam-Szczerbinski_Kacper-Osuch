@@ -17,6 +17,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Pliki logów aplikacji (generowane automatycznie przez serwer)
+/backend/logs/*.log
+!/backend/logs/.gitkeep
+
 # Pliki systemowe
 .DS_Store
 Thumbs.db
