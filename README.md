@@ -1,43 +1,43 @@
 # TAW-Adam-Szczerbinski_Kacper-Osuch
 
-# System rezerwacji boisk i obiektow sportowych — SportRez
+# System rezerwacji boisk i obiektów sportowych — SportRez
 
 ## 1. Opis wybranego tematu
 
-Aplikacja webowa pozwalajaca na przegladanie dostepnosci i rezerwacje lokalnych obiektow sportowych w wybranych przedzialach czasowych. Uzytkownik moze przegladac liste boisk, sprawdzac szczegoly (adres, cena, opis) i skladac rezerwacje online. Administrator zarzadza obiektami i rezerwacjami przez dedykowany panel.
+Aplikacja webowa pozwalająca na przeglądanie dostępności i rezerwację lokalnych obiektów sportowych w wybranych przedziałach czasowych. Użytkownik może przeglądać listę boisk, sprawdzać szczegóły (adres, cena, opis) i składać rezerwacje online. Administrator zarządza obiektami i rezerwacjami przez dedykowany panel.
 
 ## 2. Cel projektu
 
-Cyfryzacja i automatyzacja procesu wynajmu boisk z wdrozeniem bezpiecznego logowania oraz podzialem uprawnien na role uzytkownika i administratora.
+Cyfryzacja i automatyzacja procesu wynajmu boisk z wdrożeniem bezpiecznego logowania oraz podziałem uprawnień na role użytkownika i administratora.
 
 ## 3. Zakres funkcjonalny — finalna implementacja
 
-### Uzytkownik (rola: `user`)
-- Rejestracja i logowanie — tokeny JWT, hasla hashowane bcrypt (10 rund soli)
-- Przegladanie listy aktywnych boisk z wyszukiwarka (nazwa / adres)
-- Szczegoly boiska — adres, opis, cena za godzine
-- Formularz rezerwacji — wybor daty i godziny, podglad kosztu przed potwierdzeniem
-- Panel uzytkownika — historia rezerwacji z oznaczeniem statusu (oczekujaca / potwierdzona / anulowana)
-- Automatyczne wylogowanie po wygasnieciu tokenu (1 dzien)
+### Użytkownik (rola: `user`)
+- Rejestracja i logowanie — tokeny JWT, hasła hashowane bcrypt (10 rund soli)
+- Przeglądanie listy aktywnych boisk z wyszukiwarką (nazwa / adres)
+- Szczegóły boiska — adres, opis, cena za godzinę
+- Formularz rezerwacji — wybór daty i godziny, podgląd kosztu przed potwierdzeniem
+- Panel użytkownika — historia rezerwacji z oznaczeniem statusu (oczekująca / potwierdzona / anulowana)
+- Automatyczne wylogowanie po wygaśnięciu tokenu (1 dzień)
 
 ### Administrator (rola: `admin`)
-- Wszystkie funkcje uzytkownika
-- CRUD obiektow sportowych (dodawanie, edycja, usuwanie) przez modal
-- Podglad wszystkich rezerwacji z danymi uzytkownika
-- Dashboard monitoringu logow HTTP — live, auto-odswieza co 4 sekundy (`/logs`)
+- Wszystkie funkcje użytkownika
+- CRUD obiektów sportowych (dodawanie, edycja, usuwanie) przez modal
+- Podgląd wszystkich rezerwacji z danymi użytkownika
+- Dashboard monitoringu logów HTTP — live, auto-odświeża co 4 sekundy (`/logs`)
 
-### UI / ogolne
+### UI / ogólne
 - Responsywny interfejs — mobile i desktop
-- Stany: ladowania (skeleton/spinner), bledu (retry), braku danych (empty state)
-- System powiadomien toast (sukces / blad / info)
+- Stany: ładowania (skeleton/spinner), błędu (retry), braku danych (empty state)
+- System powiadomień toast (sukces / błąd / info)
 
 ## 4. Technologie
 
 - **Frontend:** React 19, React Router v7, Axios, CSS własny (dark mode, Google Fonts Inter)
 - **Backend:** Node.js, Express 5, JWT (jsonwebtoken), bcryptjs
 - **Baza danych:** MongoDB (Mongoose 9) — Atlas cloud
-- **Testy:** Jest, Supertest — 8/8 testow
-- **Monitoring:** Wlasny logger plikowy + dashboard HTML na `/logs`
+- **Testy:** Jest, Supertest — 8/8 testów
+- **Monitoring:** Własny logger plikowy + dashboard HTML na `/logs`
 
 ---
 
@@ -52,10 +52,10 @@ Cyfryzacja i automatyzacja procesu wynajmu boisk z wdrozeniem bezpiecznego logow
 
     cd backend
     npm install
-    cp .env.example .env   # uzupelnij MONGO_URI i JWT_SECRET
+    cp .env.example .env   # uzupełnij MONGO_URI i JWT_SECRET
     npm run dev
 
-Serwer dostepny na: http://localhost:5000
+Serwer dostępny na: http://localhost:5000
 
 ### Uruchomienie Frontend (React.js) — tryb developerski
 
@@ -64,7 +64,7 @@ Serwer dostepny na: http://localhost:5000
     cp .env.example .env   # REACT_APP_API_URL=http://localhost:5000/api
     npm start
 
-Aplikacja dostepna na: http://localhost:3000
+Aplikacja dostępna na: http://localhost:3000
 
 ### Uruchomienie produkcyjne
 
@@ -80,9 +80,9 @@ Aplikacja dostepna na: http://localhost:3000
     npm install
     npm run build
 
-Folder `frontend/build/` zawiera gotowa aplikacje do wdrozenia na serwerze statycznym (np. Vercel, Netlify, nginx).
+Folder `frontend/build/` zawiera gotową aplikację do wdrożenia na serwerze statycznym (np. Vercel, Netlify, nginx).
 
-Lub serwowanie frontendu bezposrednio przez Express — dodaj do `server.js`:
+Opcjonalnie — serwowanie frontendu bezpośrednio przez Express (dodaj do `server.js`):
 
     const path = require('path');
     app.use(express.static(path.join(__dirname, '../frontend/build')));
@@ -90,7 +90,7 @@ Lub serwowanie frontendu bezposrednio przez Express — dodaj do `server.js`:
       res.sendFile(path.join(__dirname, '../frontend/build/index.html'))
     );
 
-**Zmienne srodowiskowe produkcja:**
+**Zmienne środowiskowe — produkcja:**
 
     PORT=5000
     MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/sports_facilities
@@ -99,65 +99,72 @@ Lub serwowanie frontendu bezposrednio przez Express — dodaj do `server.js`:
 
 > Nigdy nie commituj pliku `.env` do repozytorium!
 
-### Uruchomienie testow
+### Uruchomienie testów
 
     cd backend
     npm test
 
-Wynik: 8/8 testow (auth.test.js + load.test.js)
+Wynik: 8/8 testów (auth.test.js + load.test.js)
+
+### Czyszczenie danych testowych
+
+    cd backend
+    node clean_db.js
+
+Usuwa dane testowe (użytkownicy testowi, powiązane rezerwacje).
 
 ---
 
 ## 6. Dokumentacja
 
-Pelna dokumentacja w folderze `/docs`:
-- `docs/api.md` — endpointy API z przykladami zapytan
+Pełna dokumentacja w folderze `/docs`:
+- `docs/api.md` — endpointy API z przykładami zapytań
 - `docs/ui.md` — specyfikacja UI, design system, wireframes
 - `docs/monitoring.md` — opis systemu logowania i dashboardu
 - `docs/ERD.png` — diagram encji bazy danych
-- `docs/use-cases.png` — diagram przypadkow uzycia
+- `docs/use-cases.png` — diagram przypadków użycia
 
 https://github.com/TAW-26/TAW-Adam-Szczerbinski_Kacper-Osuch/tree/main/docs
 
-### Endpointy API (skrot)
+### Endpointy API (skrót)
 
-    POST   /api/auth/register       rejestracja uzytkownika
+    POST   /api/auth/register       rejestracja użytkownika
     POST   /api/auth/login          logowanie -> { token, role }
 
     GET    /api/facilities          lista boisk (publiczny)
     POST   /api/facilities          dodaj boisko [admin]
     PUT    /api/facilities/:id      edytuj boisko [admin]
-    DELETE /api/facilities/:id      usun boisko [admin]
+    DELETE /api/facilities/:id      usuń boisko [admin]
 
-    POST   /api/reservations        stworz rezerwacje [user]
+    POST   /api/reservations        stwórz rezerwację [user]
     GET    /api/reservations/my     moje rezerwacje [user]
     GET    /api/reservations        wszystkie rezerwacje [admin]
-    PUT    /api/reservations/:id    aktualizuj rezerwacje [admin]
-    DELETE /api/reservations/:id    usun rezerwacje [admin]
+    PUT    /api/reservations/:id    aktualizuj rezerwację [admin]
+    DELETE /api/reservations/:id    usuń rezerwację [admin]
 
-    GET    /logs                    dashboard logow (HTML)
+    GET    /logs                    dashboard logów (HTML)
 
-Autoryzacja: naglowek `Authorization: Bearer <token>`
+Autoryzacja: nagłówek `Authorization: Bearer <token>`
 
 ---
 
 ## 7. Znane ograniczenia
 
-| Ograniczenie | Szczegoly |
+| Ograniczenie | Szczegóły |
 |---|---|
-| Brak `GET /api/facilities/:id` | Frontend pobiera cala liste i filtruje po ID — nieoptymalne przy duzej liczbie boisk |
-| Dashboard `/logs` bez auth | Endpoint logow jest publiczny — nalezy zabezpieczyc przed produkcja |
-| Brak sprawdzania kolizji rezerwacji | System nie weryfikuje czy boisko jest juz zajete w danym terminie |
+| Brak `GET /api/facilities/:id` | Frontend pobiera całą listę i filtruje po ID — nieoptymalne przy dużej liczbie boisk |
+| Dashboard `/logs` bez auth | Endpoint logów jest publiczny — należy zabezpieczyć przed produkcją |
+| Brak sprawdzania kolizji rezerwacji | System nie weryfikuje czy boisko jest już zajęte w danym terminie |
 | Brak paginacji | API zwraca wszystkie rekordy naraz |
-| Brak refresh tokenu | Token JWT wazny 1 dzien, brak mechanizmu odnowienia bez ponownego logowania |
-| CORS otwarty | Backend akceptuje requesty z kazdego originu |
-| Anulowanie przez uzytkownika | DELETE /reservations/:id wymaga roli admin — uzytkownik nie moze samodzielnie anulowac przez API |
+| Brak refresh tokenu | Token JWT ważny 1 dzień, brak mechanizmu odnowienia bez ponownego logowania |
+| CORS otwarty | Backend akceptuje requesty z każdego originu |
+| Anulowanie przez użytkownika | DELETE /reservations/:id wymaga roli admin — użytkownik nie może samodzielnie anulować przez API |
 
 ---
 
 ## 8. Autorzy
 
-- **Adam Szczerbinski**
+- **Adam Szczerbiński**
 - **Kacper Osuch**
 
 Projekt zrealizowany w ramach przedmiotu **Technologie Aplikacji Webowych (TAW)**, 2025/2026.
