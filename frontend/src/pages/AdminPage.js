@@ -39,7 +39,7 @@ const AdminPage = () => {
     setLoadingFacilities(true);
     setFacilitiesError('');
     try {
-      const { data } = await api.get('/facilities');
+      const { data } = await api.get('/facilities?all=true');
       setFacilities(data);
     } catch (err) {
       setFacilitiesError(err.response?.data?.message || 'Błąd ładowania obiektów.');
@@ -99,6 +99,27 @@ const AdminPage = () => {
       toast.error(err.response?.data?.message || 'Błąd usuwania obiektu.');
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleUpdateResStatus = async (id, status) => {
+    try {
+      await api.put(`/reservations/${id}`, { status });
+      setReservations(prev => prev.map(r => r._id === id ? { ...r, status } : r));
+      toast.success('Status rezerwacji zaktualizowany.');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Błąd podczas aktualizacji statusu rezerwacji.');
+    }
+  };
+
+  const handleDeleteReservation = async (id) => {
+    if (!window.confirm('Czy na pewno chcesz usunąć tę rezerwację?')) return;
+    try {
+      await api.delete(`/reservations/${id}`);
+      setReservations(prev => prev.filter(r => r._id !== id));
+      toast.success('Rezerwacja usunięta.');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Błąd podczas usuwania rezerwacji.');
     }
   };
 
@@ -232,6 +253,7 @@ const AdminPage = () => {
                       <th>Rozpoczęcie</th>
                       <th>Zakończenie</th>
                       <th>Status</th>
+                      <th>Akcje</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -247,6 +269,33 @@ const AdminPage = () => {
                         <td>{formatDate(r.start_time)}</td>
                         <td>{formatDate(r.end_time)}</td>
                         <td><Badge status={r.status} /></td>
+                        <td>
+                          <div style={{ display: 'flex', gap: 8 }}>
+                            {r.status === 'pending' && (
+                              <button
+                                className="btn btn-primary btn-sm"
+                                onClick={() => handleUpdateResStatus(r._id, 'confirmed')}
+                                style={{ backgroundColor: 'var(--color-success)', borderColor: 'var(--color-success)' }}
+                              >
+                                Zatwierdź
+                              </button>
+                            )}
+                            {r.status !== 'cancelled' && (
+                              <button
+                                className="btn btn-secondary btn-sm"
+                                onClick={() => handleUpdateResStatus(r._id, 'cancelled')}
+                              >
+                                Anuluj
+                              </button>
+                            )}
+                            <button
+                              className="btn btn-danger btn-sm"
+                              onClick={() => handleDeleteReservation(r._id)}
+                            >
+                              Usuń
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

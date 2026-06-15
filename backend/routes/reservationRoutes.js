@@ -15,6 +15,25 @@ router.post('/', protect, async (req, res) => {
             return res.status(400).json({ message: 'Proszę podać wszystkie dane' });
         }
 
+        const start = new Date(start_time);
+        const end = new Date(end_time);
+
+        if (start >= end) {
+            return res.status(400).json({ message: 'Godzina zakończenia musi być późniejsza niż rozpoczęcia.' });
+        }
+
+        // Sprawdź nakładanie się rezerwacji
+        const overlappingReservation = await Reservation.findOne({
+            facility_id,
+            status: { $ne: 'cancelled' },
+            start_time: { $lt: end },
+            end_time: { $gt: start }
+        });
+
+        if (overlappingReservation) {
+            return res.status(400).json({ message: 'Ten termin jest już zarezerwowany.' });
+        }
+
         const reservation = await Reservation.create({
             user_id: req.user.id,
             facility_id,
@@ -81,12 +100,19 @@ router.put('/:id', protect, adminOnly, async (req, res) => {
  * DELETE /api/reservations/:id
  * Usuwa rezerwację po ID (tylko dla administratora).
  */
-router.delete('/:id', protect, adminOnly, async (req, res) => {
+router.delete('/:id', protect, async (req, res) => {
     try {
-        const deletedReservation = await Reservation.findByIdAndDelete(req.params.id);
-        if (!deletedReservation) {
+        const reservation = await Reservation.findById(req.params.id);
+        if (!reservation) {
             return res.status(404).json({ message: 'Nie znaleziono rezerwacji do usunięcia' });
         }
+
+        // Zezwalaj tylko adminowi lub właścicielowi rezerwacji
+        if (req.user.role !== 'admin' && reservation.user_id.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Brak uprawnień do anulowania tej rezerwacji' });
+        }
+
+        await Reservation.findByIdAndDelete(req.params.id);
         res.json({ message: 'Rezerwacja została pomyślnie usunięta' });
     } catch (error) {
         res.status(500).json({ message: error.message });
