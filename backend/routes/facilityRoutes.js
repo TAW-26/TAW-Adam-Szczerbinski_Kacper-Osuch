@@ -9,7 +9,25 @@ const { protect, adminOnly } = require('../middleware/authMiddleware');
  */
 router.get('/', async (req, res) => {
     try {
-        const facilities = await Facility.find({ is_active: true });
+        let query = { is_active: true };
+
+        if (req.query.all === 'true') {
+            const authHeader = req.headers.authorization;
+            if (authHeader && authHeader.startsWith('Bearer ')) {
+                const token = authHeader.split(' ')[1];
+                const jwt = require('jsonwebtoken');
+                try {
+                    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                    if (decoded && decoded.role === 'admin') {
+                        query = {};
+                    }
+                } catch (err) {
+                    // Ignoruj błędy tokenu, domyślnie tylko aktywne obiekty
+                }
+            }
+        }
+
+        const facilities = await Facility.find(query);
         res.json(facilities);
     } catch (error) {
         res.status(500).json({ message: error.message });
